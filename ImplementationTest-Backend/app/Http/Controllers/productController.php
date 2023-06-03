@@ -59,6 +59,17 @@ class productController extends Controller
         }
     }
 
+    public function delete($id)
+    {
+        try {
+            $product = Product::findOrFail($id);
+            $product->delete();
+            return $this->successResponse(null, 'Berhasil menghapus data produk');
+        } catch (\Throwable $th) {
+            return $this->errorResponse(null, 'gagal menghapus data produk');
+        }
+    }
+    
     function successResponse($data = null, $message = null)
     {
         self::$response['meta']['time'] = date('Y-m-d H:i:s');
