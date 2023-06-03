@@ -38,6 +38,16 @@ class productController extends Controller
         }
     }
 
+    public function store(Request $request)
+    {
+        try {
+            Product::create($request->all());
+            return $this->successResponse(null, 'Berhasil menambah data produk');
+        } catch (\Throwable $th) {
+            return $this->errorResponse(null, 'gagal menambah data produk');
+        }
+    }
+
     function successResponse($data = null, $message = null)
     {
         self::$response['meta']['time'] = date('Y-m-d H:i:s');
