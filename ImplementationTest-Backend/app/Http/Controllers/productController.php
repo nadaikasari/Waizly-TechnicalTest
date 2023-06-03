@@ -27,7 +27,17 @@ class productController extends Controller
             return $this->errorResponse(null, 'gagal mendapatkan data produk');
         }
     }
-    
+ 
+    function showById($id)
+    {
+        try {
+            $data = Product::find($id);
+            return $this->successResponse($data, 'Berhasil mendapatkan data produk');
+        } catch (\Throwable $th) {
+            return $this->errorResponse(null, 'gagal mendapatkan data produk');
+        }
+    }
+
     function successResponse($data = null, $message = null)
     {
         self::$response['meta']['time'] = date('Y-m-d H:i:s');
