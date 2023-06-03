@@ -48,6 +48,17 @@ class productController extends Controller
         }
     }
 
+    public function update(Request $request, $id)
+    {
+        try {
+            $product = Product::findOrFail($id);
+            $product->update($request->all());
+            return $this->successResponse($product, 'Berhasil memperbarui data produk');
+        } catch (\Throwable $th) {
+            return $this->errorResponse(null, 'gagal memperbarui data produk');
+        }
+    }
+
     function successResponse($data = null, $message = null)
     {
         self::$response['meta']['time'] = date('Y-m-d H:i:s');
