@@ -1,5 +1,14 @@
 <?php
 
+    echo "Enter numbers : ";
+    $input = fgets(STDIN);
+
+    // Split the input into an array
+    $numbers = explode(' ', $input);
+    $numbers = array_map('trim', $numbers);
+    
+    getMinMaxSum($numbers);
+
     function getMinMaxSum($array) {
         $sum = array_sum($array);
         $min = $sum;
@@ -15,6 +24,3 @@
         }
         print "$min $max";
     }
-
-    $arrayNumber = [1,3,5,7,9];
-    getMinMaxSum($arrayNumber);
