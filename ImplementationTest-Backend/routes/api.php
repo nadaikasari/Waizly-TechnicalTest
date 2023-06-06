@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::prefix('product')->group(function () {
+Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'product'], function () {
     Route::get('/', [productController::class, 'index']);
     Route::get('/{id}', [productController::class, 'showById']);
     Route::post('/', [productController::class, 'store']);
@@ -26,4 +26,4 @@ Route::prefix('product')->group(function () {
 });
 
 Route::post('/register', [UserController::class, 'register']);
-Route::post('/login', [UserController::class, 'login'])->name('login');
+Route::post('/login', [UserController::class, 'login']);

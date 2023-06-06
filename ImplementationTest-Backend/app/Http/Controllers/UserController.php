@@ -19,13 +19,16 @@ class UserController extends Controller
 
     function register(Request $request) {
         try {
-            User::Create([
+            $user = User::Create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'api_token' => Str::random(80),
             ]);
-            return $this->jsonResponseHelper->successResponse(null, 'Berhasil mendaftar');
+
+            $data['name'] = $user->name;
+            $data['token'] = $user->createToken('auth_token')->plainTextToken;
+
+            return $this->jsonResponseHelper->successResponse($data, 'Berhasil mendaftar');
         } catch (\Throwable $th) {
             return $this->jsonResponseHelper->errorResponse(null, 'gagal mendaftar');
         }
@@ -33,39 +36,15 @@ class UserController extends Controller
 
     public function Login(Request $request)
     {
-        //set validation
-        $validator = Validator::make($request->all(), [
-            'email'     => 'required',
-            'password'  => 'required'
-        ]);
+        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            $user = Auth::user();
+            $data['name'] = $user->name;
+            $data['token'] = $user->createToken('auth_token')->plainTextToken;
 
-        //if validation fails
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return $this->jsonResponseHelper->successResponse($data, 'Login Berhasil');
+        } else {
+            return $this->jsonResponseHelper->errorResponse(null, 'email atau password salah');
         }
-
-        //get credentials from request
-        $credentials = $request->only('email', 'password');
-
-        try {
-            Auth::attempt($credentials);
-            return "success";
-        } catch (\Throwable $th) {
-            return "gagal";
-        }
-        // //if auth failed
-        // if(!$token = auth()->guard('api')->attempt($credentials)) {
-        //     return response()->json([
-        //         'success' => false,
-        //         'message' => 'Email atau Password Anda salah'
-        //     ], 401);
-        // }
-
-        //if auth success
-        // return response()->json([
-        //     'success' => true,
-        //     'user'    => auth()->guard('api')->user(),
-        // ], 200);
     }
 
 }
