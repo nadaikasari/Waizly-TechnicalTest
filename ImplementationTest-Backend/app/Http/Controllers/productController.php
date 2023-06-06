@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\JsonResponseHelper;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Routing\Controller;
 
 class productController extends Controller
@@ -19,6 +20,7 @@ class productController extends Controller
             $datas = Product::all();
             return $this->jsonResponseHelper->successResponse($datas, 'Berhasil mendapatkan data produk');
         } catch (\Throwable $th) {
+            Log::error("Error get all data product");
             return $this->jsonResponseHelper->errorResponse(null, 'gagal mendapatkan data produk');
         }
     }
@@ -29,6 +31,7 @@ class productController extends Controller
             $data = Product::find($id);
             return $this->jsonResponseHelper->successResponse($data, 'Berhasil mendapatkan data produk');
         } catch (\Throwable $th) {
+            Log::error("Error get data product id $id");
             return $this->jsonResponseHelper->errorResponse(null, 'gagal mendapatkan data produk');
         }
     }
@@ -37,8 +40,10 @@ class productController extends Controller
     {
         try {
             Product::create($request->all());
+            Log::debug("create new data product");
             return $this->jsonResponseHelper->successResponse(null, 'Berhasil menambah data produk');
         } catch (\Throwable $th) {
+            Log::error("Error create new data product");
             return $this->jsonResponseHelper->errorResponse(null, 'gagal menambah data produk');
         }
     }
@@ -48,8 +53,10 @@ class productController extends Controller
         try {
             $product = Product::findOrFail($id);
             $product->update($request->all());
+            Log::debug("update data product with id $id");
             return $this->jsonResponseHelper->successResponse($product, 'Berhasil memperbarui data produk');
         } catch (\Throwable $th) {
+            Log::error("Error update data product with $id");
             return $this->jsonResponseHelper->errorResponse(null, 'gagal memperbarui data produk');
         }
     }
@@ -59,8 +66,10 @@ class productController extends Controller
         try {
             $product = Product::findOrFail($id);
             $product->delete();
+            Log::debug("delete data product with id $id");
             return $this->jsonResponseHelper->successResponse(null, 'Berhasil menghapus data produk');
         } catch (\Throwable $th) {
+            Log::error("Error delete data product with $id");
             return $this->jsonResponseHelper->errorResponse(null, 'gagal menghapus data produk');
         }
     }
